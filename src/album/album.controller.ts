@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album, AlbumDocument } from '../schemas/album.schema';
 import { Error, Model } from 'mongoose';
@@ -14,10 +14,16 @@ export class AlbumController {
       @InjectModel(Album.name) private albumModel: Model<AlbumDocument>) {
     }
 
-    @Get('')
-    async getAlbum(@Param('id') id: string) {
-        return this.albumModel.find()
+    @Get()
+    async getAlbums(@Query('artistId') artistId?: string) {
+        if (artistId) {
+          return await this.albumModel.find({artistId}).exec();
+        } else {
+          return await this.albumModel.find().exec();
+        }
     }
+
+
 
     @Get(':id')
     async getOneAlbum(@Param('id') id: string) {
