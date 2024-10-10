@@ -14,7 +14,7 @@ export class AlbumController {
       @InjectModel(Album.name) private albumModel: Model<AlbumDocument>) {
     }
 
-    @Get()
+    @Get('')
     async getAlbum(@Param('id') id: string) {
         return this.albumModel.find()
     }
