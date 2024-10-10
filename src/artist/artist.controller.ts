@@ -1,8 +1,12 @@
-import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
-import {Model} from "mongoose";
+import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Error, Model } from 'mongoose';
 import {Artist, ArtistDocument} from "../schemas/artist.schema";
 import {InjectModel} from "@nestjs/mongoose";
 import {ArtistCategoryDto} from "./artist-category.dto";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import e from 'express';
+import { extname } from 'path'
 
 @Controller('artist')
 export class ArtistController {
@@ -21,11 +25,19 @@ export class ArtistController {
     }
 
     @Post()
-    async createArtist(@Body() artistDto: ArtistCategoryDto) {
+    @UseInterceptors(FileInterceptor('photo' , {storage: diskStorage({
+            destination: './public/images/artist',
+            filename(req: e.Request, file: Express.Multer.File, callback: (error: (Error | null), filename: string) => void) {
+                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                callback(null, `${randomName}${extname(file.originalname)}`)
+            }
+        })
+    }))
+    async createArtist(@Body() artistDto: ArtistCategoryDto , @UploadedFile() file: Express.Multer.File) {
         return await this.artistModel.create({
             name: artistDto.name,
             info: artistDto.info,
-            photo: artistDto.photo,
+            photo: file? 'images/' + file.filename : null,
         });
     }
 
