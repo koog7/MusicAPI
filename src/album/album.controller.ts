@@ -23,8 +23,6 @@ export class AlbumController {
         }
     }
 
-
-
     @Get(':id')
     async getOneAlbum(@Param('id') id: string) {
         return this.albumModel.findOne({_id:id});
