@@ -1,4 +1,4 @@
-import { Document , Types } from 'mongoose';
+import mongoose, { Document , Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type AlbumDocument = Album & Document;
@@ -8,7 +8,7 @@ export class Album {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true , type: Types.ObjectId, ref: 'Artist'})
+  @Prop({ required: true , type: mongoose.Schema.Types.ObjectId, ref: 'Artist'})
   artistId: Types.ObjectId;
 
   @Prop({ required: true })
