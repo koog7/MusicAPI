@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthGuard } from '@nestjs/passport';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
-import { use } from 'passport';
-import {Request, Response} from 'express';
+import { Request } from 'express';
+
 export interface AuthRequest extends Request {
   user: {
     username: string;

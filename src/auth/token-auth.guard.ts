@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
@@ -14,7 +14,7 @@ export class TokenAuthGuard implements CanActivate {
     const getToken = request.get('Authorization');
 
     if(!getToken){
-      return false;
+      throw new HttpException('No admin rights', HttpStatus.FORBIDDEN);
     }
 
     const [, token] = getToken.split(' ');

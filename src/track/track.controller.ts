@@ -4,6 +4,7 @@ import { Track, TrackDocument } from '../schemas/tracks.schema';
 import { Model } from 'mongoose';
 import { TrackCategoryDto } from './track-category.dto';
 import { CheckAdminRight } from '../auth/checkAdminRight';
+import { TokenAuthGuard } from '../auth/token-auth.guard';
 
 @Controller('track')
 export class TrackController {
@@ -19,6 +20,7 @@ export class TrackController {
         }
     }
 
+    @UseGuards(TokenAuthGuard)
     @Post()
     async postTrack(@Body() trackDto: TrackCategoryDto){
         return await this.trackModel.create({

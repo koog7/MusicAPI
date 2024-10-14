@@ -19,6 +19,7 @@ import { diskStorage } from 'multer';
 import e from 'express';
 import { extname } from 'path';
 import { CheckAdminRight } from '../auth/checkAdminRight';
+import { TokenAuthGuard } from '../auth/token-auth.guard';
 
 @Controller('album')
 export class AlbumController {
@@ -40,6 +41,7 @@ export class AlbumController {
         return this.albumModel.findOne({_id:id});
     }
 
+    @UseGuards(TokenAuthGuard)
     @Post()
     @UseInterceptors(FileInterceptor('photo' , {storage: diskStorage({
         destination: './public/images/album',

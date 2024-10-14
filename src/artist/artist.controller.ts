@@ -8,6 +8,7 @@ import { diskStorage } from 'multer';
 import e from 'express';
 import { extname } from 'path'
 import { CheckAdminRight } from '../auth/checkAdminRight';
+import { TokenAuthGuard } from '../auth/token-auth.guard';
 
 @Controller('artist')
 export class ArtistController {
@@ -25,6 +26,7 @@ export class ArtistController {
         return this.artistModel.findOne({_id:id});
     }
 
+    @UseGuards(TokenAuthGuard)
     @Post()
     @UseInterceptors(FileInterceptor('photo' , {storage: diskStorage({
             destination: './public/images/artist',
