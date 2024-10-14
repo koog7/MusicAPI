@@ -48,7 +48,7 @@ export class UsersController {
   @Delete('sessions')
   async delete(@Req() req: Request){
     const getToken = req.get('Authorization');
-    console.log(getToken);
+
     if(!getToken){
       return null;
     }
@@ -58,13 +58,13 @@ export class UsersController {
     if(!token){
       return null;
     }
-    console.log(token);
+
     const user = await this.userModel.findOne({token:token});
 
     if(!user){
       return null;
     }
-    console.log(user);
+
     user.generateToken()
 
     await user.save();

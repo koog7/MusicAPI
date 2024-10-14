@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Track, TrackDocument } from '../schemas/tracks.schema';
 import { Model } from 'mongoose';
 import { TrackCategoryDto } from './track-category.dto';
+import { CheckAdminRight } from '../auth/checkAdminRight';
 
 @Controller('track')
 export class TrackController {
@@ -27,7 +28,7 @@ export class TrackController {
             numberTrack: trackDto.numberTrack
         })
     }
-
+    @UseGuards(CheckAdminRight)
     @Delete(':id')
     async deleteArtist(@Param('id') id:string){
       const findAlbum = await this.trackModel.findOne({_id:id});

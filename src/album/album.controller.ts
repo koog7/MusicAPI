@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album, AlbumDocument } from '../schemas/album.schema';
 import { Error, Model } from 'mongoose';
@@ -7,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import e from 'express';
 import { extname } from 'path';
+import { CheckAdminRight } from '../auth/checkAdminRight';
 
 @Controller('album')
 export class AlbumController {
@@ -45,7 +57,7 @@ export class AlbumController {
           photo: file? 'images/' + file.filename : null,
         });
     }
-
+  @UseGuards(CheckAdminRight)
   @Delete(':id')
   async deleteArtist(@Param('id') id:string){
     const findAlbum = await this.albumModel.findOne({_id:id});
