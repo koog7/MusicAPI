@@ -1,14 +1,27 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Track, TrackDocument } from '../schemas/tracks.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { TrackCategoryDto } from './track-category.dto';
 import { CheckAdminRight } from '../auth/checkAdminRight';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { Album, AlbumDocument } from '../schemas/album.schema';
 
 @Controller('track')
 export class TrackController {
-    constructor(@InjectModel(Track.name) private trackModel: Model<TrackDocument>) {
+    constructor(@InjectModel(Track.name) private trackModel: Model<TrackDocument>,
+                @InjectModel(Album.name) private albumModel: Model<AlbumDocument>) {
     }
 
     @Get()
@@ -23,7 +36,7 @@ export class TrackController {
     @UseGuards(TokenAuthGuard)
     @Post()
     async postTrack(@Body() trackDto: TrackCategoryDto){
-        return await this.trackModel.create({
+      return await this.trackModel.create({
             title: trackDto.title,
             duration: trackDto.duration,
             albumId: trackDto.albumId,

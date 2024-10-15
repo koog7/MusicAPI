@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpException, HttpStatus,
   Param,
   Post,
   Query,
@@ -20,11 +20,13 @@ import e from 'express';
 import { extname } from 'path';
 import { CheckAdminRight } from '../auth/checkAdminRight';
 import { TokenAuthGuard } from '../auth/token-auth.guard';
+import { Artist, ArtistDocument } from '../schemas/artist.schema';
 
 @Controller('album')
 export class AlbumController {
     constructor(
-      @InjectModel(Album.name) private albumModel: Model<AlbumDocument>) {
+      @InjectModel(Album.name) private albumModel: Model<AlbumDocument>,
+      @InjectModel(Artist.name) private artistModel: Model<ArtistDocument>) {
     }
 
     @Get()
@@ -52,7 +54,7 @@ export class AlbumController {
       })
     }))
     async createArtist(@Body() albumDto: AlbumCategoryDto, @UploadedFile() file: Express.Multer.File) {
-        return await this.albumModel.create({
+      return await this.albumModel.create({
           title: albumDto.title,
           artistId: albumDto.artistId,
           yearRelease: albumDto.yearRelease,

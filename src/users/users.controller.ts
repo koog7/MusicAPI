@@ -3,7 +3,6 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AuthGuard } from '@nestjs/passport';
-import { TokenAuthGuard } from '../auth/token-auth.guard';
 import { Request } from 'express';
 
 export interface AuthRequest extends Request {
@@ -36,13 +35,6 @@ export class UsersController {
   @Post('sessions')
   async login(@Req() req: AuthRequest){
     return req.user
-  }
-
-  @UseGuards(TokenAuthGuard)
-  @Post('secret')
-  async secret(@Req() req: AuthRequest){
-    const user = req.user as UserDocument;
-    return {message:'success' , user: user.username}
   }
 
   @Delete('sessions')

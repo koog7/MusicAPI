@@ -14,18 +14,18 @@ export class TokenAuthGuard implements CanActivate {
     const getToken = request.get('Authorization');
 
     if(!getToken){
-      throw new HttpException('No admin rights', HttpStatus.FORBIDDEN);
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
 
     const [, token] = getToken.split(' ');
 
     if(!token){
-      return false;
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
     const user = await this.userModel.findOne({token:token});
 
     if(!user){
-      return false;
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
     }
 
     request.user = user;

@@ -27,7 +27,7 @@ export class CheckAdminRight implements CanActivate {
     const user = await this.userModel.findOne({token:token});
 
     if (user.role !== 'admin') {
-      throw new HttpException('Unauthorized', HttpStatus.FORBIDDEN);
+      throw new HttpException('No admin rights', HttpStatus.FORBIDDEN);
     }
 
     return true;
